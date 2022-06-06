@@ -25,7 +25,6 @@ public class Calculator {
     }
 
     public static void main(String[] args) {
-//        int result = sum(10);
         Calculator calc = new Calculator();
         System.out.println(sum(3));
         System.out.println(minus(3));
