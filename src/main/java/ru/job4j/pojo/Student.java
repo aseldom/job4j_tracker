@@ -1,6 +1,7 @@
 package ru.job4j.pojo;
 
 public class Student {
+
     private String name;
     private String group;
     private String date;
