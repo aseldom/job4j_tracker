@@ -11,7 +11,7 @@ public class Matches {
         while (count > 0) {
             String player = turn ? "Первый игрок" : "Второй игрок";
             System.out.println("Число оставшихся спичек: " + count);
-            System.out.println(player + " введите число от 1 до " + ((count >= 2) ? 3 : count) + ": ");
+            System.out.println(player + " введите число от 1 до " + (Math.min(count, 3)) + ": ");
             int matches = Integer.parseInt(input.nextLine());
             if (matches < 1 || matches > 3) {
                 System.out.println("Ошибка, неправильный ввод");
