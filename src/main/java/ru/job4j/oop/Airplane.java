@@ -1,7 +1,7 @@
 package ru.job4j.oop;
 
 public class Airplane implements Vehicle {
-    String model;
+    private String model;
 
     public Airplane(String model) {
         this.model = model;

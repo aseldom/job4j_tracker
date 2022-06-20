@@ -2,7 +2,7 @@ package ru.job4j.oop;
 
 public class Bus implements Vehicle {
 
-    String model;
+    private String model;
 
     public Bus(String model) {
         this.model = model;
