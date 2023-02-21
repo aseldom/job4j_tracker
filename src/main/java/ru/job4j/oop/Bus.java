@@ -13,4 +13,8 @@ public class Bus implements Vehicle {
         System.out.println("The bus " + model + " rides on the roads");
     }
 
+    public void signal() {
+        System.out.println("The bus doing \"beep - beep!\"");
+    }
+
 }
