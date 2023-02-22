@@ -4,39 +4,29 @@ import static java.lang.Character.*;
 
 public class PasswordValidator {
     private final static String[] PATTERN = {"qwerty", "12345", "password", "admin", "user"};
-    private static boolean isUpper;
-    private static boolean isLower;
-    private static boolean isDigit;
-    private static boolean isSpecial;
 
     public static String validate(String password) {
-        isUpper = false;
-        isLower = false;
-        isDigit = false;
-        isSpecial = false;
 
         if (password == null) {
             throw new IllegalArgumentException("Password can't be null");
         }
 
-        char[] chars = password.toCharArray();
-
-        checkSymbols(chars);
+        boolean[] check = checkSymbols(password.toCharArray());
 
         if (password.length() < 8 || password.length() > 32) {
             throw new IllegalArgumentException("Password should be length [8, 32]");
         }
 
-        if (!isUpper) {
+        if (!check[0]) {
             throw new IllegalArgumentException("Password should contain at least one uppercase letter");
         }
-        if (!isLower) {
+        if (!check[1]) {
             throw new IllegalArgumentException("Password should contain at least one lowercase letter");
         }
-        if (!isDigit) {
+        if (!check[2]) {
             throw new IllegalArgumentException("Password should contain at least one figure");
         }
-        if (!isSpecial) {
+        if (!check[3]) {
             throw new IllegalArgumentException("Password should contain at least one special symbol");
         }
         if (isPattern(PATTERN, password)) {
@@ -45,7 +35,12 @@ public class PasswordValidator {
         return password;
     }
 
-    public static void checkSymbols(char[] chars) {
+    public static boolean[] checkSymbols(char[] chars) {
+        boolean isUpper = false;
+        boolean isLower = false;
+        boolean isDigit = false;
+        boolean isSpecial = false;
+
         for (char c : chars) {
             if (isUpperCase(c)) {
                 isUpper = true;
@@ -60,6 +55,7 @@ public class PasswordValidator {
                 isSpecial = true;
             }
         }
+        return new boolean[] {isUpper, isLower, isDigit, isSpecial};
     }
 
     public static boolean isPattern(String[] patterns, String password) {
