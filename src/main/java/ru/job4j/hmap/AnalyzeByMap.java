@@ -35,11 +35,7 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 String name = subject.name();
-                if (map.get(name) != null) {
-                    map.put(name, map.get(name) + subject.score());
-                } else {
-                    map.put(name, subject.score());
-                }
+                map.put(name, subject.score() + map.getOrDefault(name, 0));
             }
         }
         int numPupils = pupils.size();
@@ -68,11 +64,7 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 String name = subject.name();
-                if (map.get(name) != null) {
-                    map.put(name, map.get(name) + subject.score());
-                } else {
-                    map.put(name, subject.score());
-                }
+                map.put(name, subject.score() + map.getOrDefault(name, 0));
             }
         }
         for (String name : map.keySet()) {
