@@ -10,5 +10,4 @@ public class Symmetry {
         }
         return true;
     }
-    //sdaf
 }
