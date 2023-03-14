@@ -7,10 +7,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class SortTest {
     @Test
-    void ItemAscByNameSort () {
+    void itemAscByNameSort() {
         List<Item> items = Arrays.asList(
                 new Item("Name aaaaaaa"),
                 new Item("Name bbbbbbb"),
@@ -28,7 +27,7 @@ public class SortTest {
     }
 
     @Test
-    void ItemDescByNameSort () {
+    void itemDescByNameSort() {
         List<Item> items = Arrays.asList(
                 new Item("Name aaaaaaa"),
                 new Item("Name bbbbbbb"),
