@@ -60,7 +60,6 @@ public class Item {
         if (!name.equals(item.name)) {
             return false;
         }
-
         return true;
     }
 
