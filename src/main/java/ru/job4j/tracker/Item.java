@@ -57,14 +57,16 @@ public class Item {
 
         Item item = (Item) o;
 
-        if (!name.equals(item.name)) {
+        if (id != item.id) {
             return false;
         }
-        return true;
+        return name.equals(item.name);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int result = id;
+        result = 31 * result + name.hashCode();
+        return result;
     }
 }
