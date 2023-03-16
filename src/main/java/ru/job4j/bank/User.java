@@ -2,7 +2,16 @@ package ru.job4j.bank;
 
 import java.util.Objects;
 
+/**
+ * Класс описывает модель пользователя банка.
+ * @author Vasya Pupkin
+ * @version 1.0
+ */
 public class User {
+    /**
+     * Хранение данных пользователя банка осуществляется в полях: passport (номер паспорта) и
+     * username (ФИО).
+     */
     private String passport;
     private String username;
 
