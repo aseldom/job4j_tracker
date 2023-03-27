@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * Данный класс описывает модель банковского счета.
- * @author Vasya Pupkin
+ * @author Vasya Puppkin
  * @version 1.0
  */
 public class Account {
