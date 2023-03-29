@@ -15,12 +15,12 @@ public class PhoneDictionary {
         Predicate<Person> containsSurname = s -> s.getSurname().contains(key);
         Predicate<Person> containsPhone = s -> s.getPhone().contains(key);
         Predicate<Person> containsAdress = s -> s.getAddress().contains(key);
-        Predicate<Person> combine = containsName
+        var combine = containsName
                 .or(containsAdress)
                 .or(containsSurname)
                 .or(containsPhone);
-        ArrayList<Person> result = new ArrayList<>();
-        for (Person person : persons) {
+        var result = new ArrayList<Person>();
+        for (var person : persons) {
             if (combine.test(person)) {
                 result.add(person);
             }
