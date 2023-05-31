@@ -60,10 +60,15 @@ public class SqlTracker implements Store {
     @Override
     public Item add(Item item) {
         try (PreparedStatement st = connection.prepareStatement(
-                "INSERT INTO items (name, created) VALUES (?, ?)")) {
+                "INSERT INTO items (name, created) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             st.setString(1, item.getName());
             st.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
-            st.execute();
+            st.executeUpdate();
+            try (ResultSet resultSet = st.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    item.setId(resultSet.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
