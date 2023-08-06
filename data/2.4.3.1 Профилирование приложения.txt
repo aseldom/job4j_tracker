@@ -1,0 +1,132 @@
+Профилировние приложения job4j_tracker при добавлении, вызове, удалении 100 тыс записей.
+Программа была запущена с ключом -Xlog:gc* для отслеживания запуска GC.
+
+1. Состояние памяти после запуска программы, до выполнения каких-либо действий. Heap 12Mb
+jmap -histo <pid>
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:          1334        1749336  [I (java.base@17.0.6)
+   2:         12164         951528  [B (java.base@17.0.6)
+   3:         10201         326432  java.util.HashMap$Node (java.base@17.0.6)
+   4:          9908         237792  java.lang.String (java.base@17.0.6)
+   5:           862         174256  [Ljava.util.HashMap$Node; (java.base@17.0.6)
+   6:          1238         151376  java.lang.Class (java.base@17.0.6)
+   7:          3196         148368  [Ljava.lang.Object; (java.base@17.0.6)
+   8:           290         122904  [C (java.base@17.0.6)
+
+
+2. Состояние памяти после создния 100тыс. записей. Heap 20 Mb (jconsole). По протоколу был вызван GC.
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:        124039        6632416  [B (java.base@17.0.6)
+   2:        118247        2837928  java.lang.String (java.base@17.0.6)
+   3:        100130        2403120  java.time.LocalDateTime (java.base@17.0.6)
+   4:        100070        2401680  java.time.LocalDate (java.base@17.0.6)
+   5:        100026        2400624  java.time.LocalTime (java.base@17.0.6)
+   6:        100000        2400000  ru.job4j.tracker.Item
+   7:          2992        1653096  [I (java.base@17.0.6)
+   8:         10895         942696  [Ljava.lang.Object; (java.base@17.0.6)
+
+
+3. Состояние памяти после первого выполнения команды Show all items. Heap 60 Mb (jconsole).
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:        554605       34966384  [B (java.base@17.0.6)
+   2:          2496       10399224  [I (java.base@17.0.6)
+   3:        195612        4694688  java.lang.String (java.base@17.0.6)
+   4:        100130        2403120  java.time.LocalDateTime (java.base@17.0.6)
+   5:        100070        2401680  java.time.LocalDate (java.base@17.0.6)
+   6:        100026        2400624  java.time.LocalTime (java.base@17.0.6)
+   7:        100000        2400000  ru.job4j.tracker.Item
+   8:         39568        2215808  java.nio.HeapCharBuffer (java.base@17.0.6)
+ 
+
+4. Состояние памяти после второго выполнения команды Show all items. Heap 170 Mb (jconsole).
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:       1700437      112519640  [B (java.base@17.0.6)
+   2:         13078       13665920  [I (java.base@17.0.6)
+   3:        413435        9922440  java.lang.String (java.base@17.0.6)
+   4:        139583        7816648  java.nio.HeapCharBuffer (java.base@17.0.6)
+   5:        279234        6701616  java.util.AbstractMap$SimpleImmutableEntry (java.base@17.0.6)
+   6:         50565        3817928  [Ljava.lang.Object; (java.base@17.0.6)
+   7:        149895        3597480  java.lang.StringBuilder (java.base@17.0.6)
+   8:        139553        3349272  java.time.format.DateTimePrintContext (java.base@17.0.6)
+  
+  
+5. Состояние памяти после третьего выполнения команды Show all items. Heap 272 Mb (jconsole).
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:       2826534      188018136  [B (java.base@17.0.6)
+   2:         19358       16630256  [I (java.base@17.0.6)
+   3:        623888       14973312  java.lang.String (java.base@17.0.6)
+   4:        239598       13417488  java.nio.HeapCharBuffer (java.base@17.0.6)
+   5:        479234       11501616  java.util.AbstractMap$SimpleImmutableEntry (java.base@17.0.6)
+   6:        255607        6134568  java.lang.StringBuilder (java.base@17.0.6)
+   7:        239553        5749272  java.time.format.DateTimePrintContext (java.base@17.0.6)
+   8:         77339        5746776  [Ljava.lang.Object; (java.base@17.0.6)
+   9:         12111        3536752  [C (java.base@17.0.6)
+
+
+6. Состояние памяти после выполнения команды Delete all items. Heap 292 Mb (jconsole).
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:       2863059      191816136  [B (java.base@17.0.6)
+   2:         28039       16620184  [I (java.base@17.0.6)
+   3:        638502       15324048  java.lang.String (java.base@17.0.6)
+   4:        239614       13418384  java.nio.HeapCharBuffer (java.base@17.0.6)
+   5:        479234       11501616  java.util.AbstractMap$SimpleImmutableEntry (java.base@17.0.6)
+   6:        113517        8493432  [Ljava.lang.Object; (java.base@17.0.6)
+   7:        263597        6326328  java.lang.StringBuilder (java.base@17.0.6)
+   8:        239553        5749272  java.time.format.DateTimePrintContext (java.base@17.0.6)
+   9:         18039        5268168  [C (java.base@17.0.6)
+
+
+7. После добавления 100тыс записей и отсутствии каких-либо действий с программой с интервалом ~1 мин наблюдается (jconsile) периодическое увеличение размера Heap на ~4Mb
+
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:        189845       13467808  [B (java.base@17.0.6)
+   2:         18654        5438568  [I (java.base@17.0.6)
+   3:         76220        3735128  [Ljava.lang.Object; (java.base@17.0.6)
+   4:         12306        3595424  [C (java.base@17.0.6)
+   5:        144558        3469392  java.lang.String (java.base@17.0.6)
+   6:        100130        2403120  java.time.LocalDateTime (java.base@17.0.6)
+   7:        100070        2401680  java.time.LocalDate (java.base@17.0.6)
+   8:        100026        2400624  java.time.LocalTime (java.base@17.0.6)
+   9:        100000        2400000  ru.job4j.tracker.Item
+Total       1100571       49254640
+
+Состояние памяти после интервала ~1 мин.:
+ num     #instances         #bytes  class name (module)
+-------------------------------------------------------
+   1:        202648       14792496  [B (java.base@17.0.6)
+   2:         21699        6096624  [I (java.base@17.0.6)
+   3:         88909        4277920  [Ljava.lang.Object; (java.base@17.0.6)
+   4:         14387        4202688  [C (java.base@17.0.6)
+   5:        149652        3591648  java.lang.String (java.base@17.0.6)
+   6:        100130        2403120  java.time.LocalDateTime (java.base@17.0.6)
+   7:        100070        2401680  java.time.LocalDate (java.base@17.0.6)
+   8:        100026        2400624  java.time.LocalTime (java.base@17.0.6)
+   9:        100000        2400000  ru.job4j.tracker.Item
+Total       1172657       53877912
+
+При достижении некоторого порога происходит запуск GC и очистка памяти:
+[562.546s][info][gc          ] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 40M->21M(512M) 16.619ms
+[1506.655s][info][gc          ] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 61M->21M(512M) 2.369ms
+
+
+8. При попытке добавить 50 000 000 записей был достигнут предел объема кучи 8Gb (jconsole).
+Current heap size: 7 931 992 kbytes
+Maximum heap size: 8 351 744 kbytes
+
+[3027.435s][info][gc,heap,exit   ]  garbage-first heap   total 8351744K, used 7936090K [0x0000000602400000, 0x0000000800000000)
+
+Ошибка:
+	Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
