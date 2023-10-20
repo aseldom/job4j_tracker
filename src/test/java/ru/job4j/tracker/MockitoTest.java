@@ -70,7 +70,7 @@ public class MockitoTest {
         Output out = new StubOutput();
         Store tracker = new MemTracker();
         String name = "Simply item";
-        tracker.add(new Item(name));
+        Item item = tracker.add(new Item(name));
         FindByNameAction findByNameAction = new FindByNameAction(out);
 
         Input input = mock(Input.class);
@@ -79,7 +79,7 @@ public class MockitoTest {
 
         findByNameAction.execute(input, tracker);
         String ln = System.lineSeparator();
-        assertThat(out.toString()).isEqualTo("=== Find items by name ===" + ln + tracker.findByName(name).get(0) + ln);
+        assertThat(out.toString()).isEqualTo("=== Find items by name ===" + ln + item + ln);
         assertThat(tracker.findAll().get(0).getName()).isEqualTo(name);
     }
 
