@@ -7,8 +7,7 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Category {
     @EqualsAndHashCode.Include
-    @NonNull
-    private int id;
+    final private int id;
     @Setter
     private String name;
 }
