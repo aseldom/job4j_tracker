@@ -9,13 +9,13 @@ import ru.job4j.mapstuct.model.StudentEntity;
 @Mapper
 public interface  StudentMapper {
 
-    @Mapping(target="className", source="classVal")
+    @Mapping(target = "className", source = "classVal")
     StudentDto getModelFromEntity(StudentEntity student);
 
     @InheritInverseConfiguration
     StudentEntity detEntityFromDto(StudentDto studentDto);
 
-    default StudentDto getModelFromEntityCustom(StudentEntity studentEntity){
+    default StudentDto getModelFromEntityCustom(StudentEntity studentEntity) {
         StudentDto student = new StudentDto();
         student.setId(studentEntity.getId());
         student.setName(studentEntity.getName());
