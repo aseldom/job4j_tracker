@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.tracker.Item;
 import ru.job4j.tracker.Store;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HbmTracker implements Store, AutoCloseable {
@@ -49,7 +50,7 @@ public class HbmTracker implements Store, AutoCloseable {
         } finally {
             session.close();
         }
-        return (rowCount != 0);
+        return rowCount != 0;
     }
 
     @Override
@@ -68,18 +69,20 @@ public class HbmTracker implements Store, AutoCloseable {
         } finally {
             session.close();
         }
-        return (rowCount != 0);
+        return rowCount != 0;
     }
 
     @Override
     public List<Item> findAll() {
         Session session = sf.openSession();
-        List<Item> result;
+        List<Item> result = new ArrayList<>();
         try {
             session.beginTransaction();
             result = session.createQuery("FROM Item", Item.class)
                     .list();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
@@ -89,13 +92,15 @@ public class HbmTracker implements Store, AutoCloseable {
     @Override
     public List<Item> findByName(String key) {
         Session session = sf.openSession();
-        List<Item> result;
+        List<Item> result = new ArrayList<>();
         try {
             session.beginTransaction();
             result = session.createQuery("FROM Item WHERE name = :fName", Item.class)
                     .setParameter("fName", key)
                     .list();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
@@ -105,13 +110,15 @@ public class HbmTracker implements Store, AutoCloseable {
     @Override
     public Item findById(int id) {
         Session session = sf.openSession();
-        Item result;
+        Item result = null;
         try {
             session.beginTransaction();
             result = session.createQuery("FROM Item WHERE id = :fId", Item.class)
                     .setParameter("fId", id)
                     .uniqueResult();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
