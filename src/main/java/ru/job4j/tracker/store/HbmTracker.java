@@ -10,6 +10,7 @@ import ru.job4j.tracker.Store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class HbmTracker implements Store, AutoCloseable {
 
@@ -18,58 +19,43 @@ public class HbmTracker implements Store, AutoCloseable {
     private final SessionFactory sf = new MetadataSources(registry)
             .buildMetadata().buildSessionFactory();
 
-    @Override
-    public Item add(Item item) {
+    private boolean crud(Consumer<Session> consumer) {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.save(item);
+            consumer.accept(session);
             session.getTransaction().commit();
+            return true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return false;
+    }
+
+    @Override
+    public Item add(Item item) {
+        crud(session -> session.save(item));
         return item;
     }
 
     @Override
     public boolean replace(int id, Item item) {
-        Session session = sf.openSession();
-        int rowCount = 0;
-        try {
-            session.beginTransaction();
-            rowCount = session.createQuery(
-                            "UPDATE Item SET name = :fName, created = :fCreated WHERE id = :fId")
-                    .setParameter("fName", item.getName())
-                    .setParameter("fCreated", item.getCreated())
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return rowCount != 0;
+        return crud(session -> session.createQuery(
+                        "UPDATE Item SET name = :fName, created = :fCreated WHERE id = :fId")
+                .setParameter("fName", item.getName())
+                .setParameter("fCreated", item.getCreated())
+                .setParameter("fId", id)
+                .executeUpdate());
     }
 
     @Override
     public boolean delete(int id) {
-        Session session = sf.openSession();
-        int rowCount = 0;
-        try {
-            session.beginTransaction();
-            rowCount = session.createQuery(
-                            "DELETE FROM Item WHERE id = :fId")
-                    .setParameter("fId", id)
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return rowCount != 0;
+        return crud(session -> session.createQuery(
+                        "DELETE FROM Item WHERE id = :fId")
+                .setParameter("fId", id)
+                .executeUpdate());
     }
 
     @Override
