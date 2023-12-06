@@ -13,7 +13,7 @@ public class TrackerHbmTest {
     @AfterEach
     public void deleteAllItems() throws Exception {
         try (var tracker = new HbmTracker()) {
-            for(Item item : tracker.findAll()) {
+            for (Item item : tracker.findAll()) {
                 tracker.delete(item.getId());
             }
         }
